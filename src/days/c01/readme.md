@@ -40,3 +40,31 @@ No exemplo acima, os pares e as distâncias seriam os seguintes:
 Para encontrar a distância total entre a lista da esquerda e a lista da direita, some todas as distâncias entre os pares encontrados. No exemplo acima, isso seria 2 + 1 + 0 + 1 + 2 + 5, uma distância total de 11!
 
 Suas listas reais de locais possuem muitos IDs de locais. Qual é a distância total entre suas listas?
+
+--- Parte 2 ---
+
+Sua análise apenas confirmou o que todos temiam: as duas listas de IDs de localização são realmente muito diferentes. Ou são?
+Os Historiadores não conseguem concordar sobre qual grupo cometeu os erros ou como ler a maioria da caligrafia do Chefe, mas em meio à confusão, você percebe um detalhe interessante: muitos IDs de localização aparecem nas duas listas! Talvez os outros números não sejam IDs de localização, mas sim interpretações erradas da caligrafia.
+
+Desta vez, você precisará descobrir exatamente quantas vezes cada número da lista da esquerda aparece na lista da direita. Calcule uma pontuação de similaridade total somando cada número da lista da esquerda após multiplicá-lo pelo número de vezes que esse número aparece na lista da direita.
+
+Aqui estão os mesmos exemplos de listas novamente:
+```
+3   4
+4   3
+2   5
+1   3
+3   9
+3   3
+```
+Para essas listas de exemplo, aqui está o processo para encontrar a pontuação de similaridade:
+
+1. O primeiro número na lista da esquerda é 3. Ele aparece na lista da direita três vezes, então a pontuação de similaridade aumenta em 3 * 3 = 9.
+2. O segundo número na lista da esquerda é 4. Ele aparece na lista da direita uma vez, então a pontuação de similaridade aumenta em 4 * 1 = 4.
+3. O terceiro número na lista da esquerda é 2. Ele não aparece na lista da direita, então a pontuação de similaridade não aumenta (2 * 0 = 0).
+4. O quarto número, 1, também não aparece na lista da direita.
+5. O quinto número, 3, aparece na lista da direita três vezes; a pontuação de similaridade aumenta em 9.
+6. O último número, 3, aparece na lista da direita três vezes; a pontuação de similaridade aumenta novamente em 9.
+Então, para essas listas de exemplo, a pontuação de similaridade no final desse processo é 31 (9 + 4 + 0 + 0 + 9 + 9).
+
+Considere novamente suas listas esquerda e direita. Qual é a pontuação de similaridade delas?
