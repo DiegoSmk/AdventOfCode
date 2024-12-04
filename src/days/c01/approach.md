@@ -57,6 +57,3 @@ val frequencyMap = rightList.groupingBy { it }.eachCount()
 
 ### 4. **Resultado Final**
 Após processar todos os números da lista da esquerda, o valor final do ```similarityScore``` será o **score de similaridade**.
-
-
-

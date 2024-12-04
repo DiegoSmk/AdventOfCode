@@ -28,7 +28,6 @@ fun main () {
 
     println("================================")
 
-
     // Measure execution time for the optimized implementation (using an Array).
     measureExecutionTime({
         // ===== PART ONE ======
