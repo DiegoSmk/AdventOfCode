@@ -7,14 +7,24 @@ import kotlin.time.measureTime
 fun main () {
     // Measure code in milleSeconds.
     val startTime = measureTime {
+        // ===== PART ONE ======
         val input = readInput("inputC1")
         val organize = organizeList(input)
         val calculateDistance = calculateTotalDistance(organize.left, organize.right)
-        println(calculateDistance)
+        println("Part One - $calculateDistance")
+
+        // ===== PART TWO ======
+        val rightFrequencyMap = countOccurrences(organize.right)
+        val score = organize.left.sumOf { num ->
+            num * rightFrequencyMap.getOrDefault(num, 0)
+        }
+        println("Part Two - $score")
     }
 
     println("Execution time: $startTime")
 }
+
+// ===== PART ONE ======
 
 data class ResultListOrganize(
     val left: List<Int>,
@@ -46,4 +56,10 @@ fun calculateTotalDistance(leftList: List<Int>, rightList: List<Int>): Int {
         totalDistance += abs(leftList[i] - rightList[i])
     }
     return totalDistance
+}
+
+// ===== PART TWO ======
+
+fun countOccurrences(list: List<Int>): Map<Int, Int> {
+    return list.groupingBy { it }.eachCount()
 }
