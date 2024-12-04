@@ -12,6 +12,14 @@ fun main() {
 
         println("The number of safe reports is $countSafeReports")
     })
+
+    measureExecutionTime({
+        // Process the reports and count how many are safe
+        val safeReportsCount = input.count { isReportSafe(it) }
+
+        // Display the result
+        println("CHATGPT - The number of safe reports is $safeReportsCount")
+    }, "CHATGPT")
 }
 
 /**
@@ -58,4 +66,25 @@ fun countSafeReports(reports: List<String>): Int {
     }
 
     return countSafe
+}
+
+// ========== (chatgpt solution) ==============
+/**
+ * Checks if a report is safe.
+ *
+ * @param report A single report represented as a string of space-separated numbers.
+ * @return `true` if the report is safe, otherwise `false`.
+ */
+fun isReportSafe(report: String): Boolean {
+    // Convert the report into a list of numbers
+    val levels = report.split(" ").map { it.toInt() }
+
+    // Check if levels are in strictly increasing order
+    val isIncreasing = levels.zipWithNext().all { (a, b) -> b > a && (b - a) in 1..3 }
+
+    // Check if levels are in strictly decreasing order
+    val isDecreasing = levels.zipWithNext().all { (a, b) -> b < a && (a - b) in 1..3 }
+
+    // Return true if the report is safe based on either condition
+    return isIncreasing || isDecreasing
 }
