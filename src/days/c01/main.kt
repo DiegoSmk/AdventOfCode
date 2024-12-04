@@ -1,12 +1,12 @@
 package days.c01
 
+import utils.measureExecutionTime
 import utils.readInput
 import kotlin.math.abs
-import kotlin.system.measureTimeMillis
 
 fun main () {
-    // Measure code in milleSeconds.
-    val executionTime = measureTimeMillis {
+    // Measure the execution time of the code in milliseconds for the initial implementation
+    measureExecutionTime({
         // ===== PART ONE ======
         val input = readInput("inputC1") // Reads input data from a file or other source
         val organizedLists = organizeList(input)  // Organizes the input into sorted left and right lists
@@ -24,13 +24,13 @@ fun main () {
             num * rightFrequencyMap.getOrDefault(num, 0) // Multiply each number in the left list by its frequency in the right list
         }
         println("Part Two - Similarity Score: $similarityScore")
-    }
+    })
 
-    // Output the total execution time for the first implementation.
-    println("Execution time: $executionTime ms")
+    println("================================")
+
 
     // Measure execution time for the optimized implementation (using an Array).
-    val executionTimeWithPerformance = measureTimeMillis {
+    measureExecutionTime({
         // ===== PART ONE ======
         val input = readInput("inputC1") // Reads input data from a file or other source
         val organizedLists = organizeList(input)  // Organizes the input into sorted left and right lists
@@ -42,22 +42,22 @@ fun main () {
         // ===== PART TWO ======
         // Create a frequency array for the right list
         val maxValue = organizedLists.right.maxOrNull() ?: 0 // Safely get the maximum value from the right list.
-        val rightFrequencyArray = countOccurrencesWithArray(organizedLists.right, maxValue)
+        val rightListFrequencyCounts = countOccurrencesWithArray(organizedLists.right, maxValue)
 
         // Calculate the similarity score for Part Two
         val similarityScore  = organizedLists.left.sumOf { num ->
-            num * rightFrequencyArray.getOrElse(num) {0} // Multiply each number in the left list by its frequency in the right list
+            num * rightListFrequencyCounts.getOrElse(num) {0} // Multiply each number in the left list by its frequency in the right list
         }
         println("Performance - Part Two - Similarity Score: $similarityScore")
-    }
-
-    // Output the total execution time for the optimized implementation.
-    println("Performance - Execution time: $executionTimeWithPerformance ms")
+    }, "PERFORMANCE")
 }
 
 // ===== PART ONE ======
 /**
  * Data class to store the organized left and right lists.
+ *
+ * @param left The sorted left list of integers.
+ * @param right The sorted right list of integers.
  */
 data class ResultListOrganize(
     val left: List<Int>, // Sorted left list
