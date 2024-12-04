@@ -26,8 +26,33 @@ fun main () {
         println("Part Two - Similarity Score: $similarityScore")
     }
 
-    // Output the total execution time
+    // Output the total execution time for the first implementation.
     println("Execution time: $executionTime ms")
+
+    // Measure execution time for the optimized implementation (using an Array).
+    val executionTimeWithPerformance = measureTimeMillis {
+        // ===== PART ONE ======
+        val input = readInput("inputC1") // Reads input data from a file or other source
+        val organizedLists = organizeList(input)  // Organizes the input into sorted left and right lists
+
+        // Calculate the total distance for Part One
+        val totalDistance = calculateTotalDistance(organizedLists.left, organizedLists.right)
+        println("Performance - Part One - Total Distance: $totalDistance")
+
+        // ===== PART TWO ======
+        // Create a frequency array for the right list
+        val maxValue = organizedLists.right.maxOrNull() ?: 0 // Safely get the maximum value from the right list.
+        val rightFrequencyArray = countOccurrencesWithArray(organizedLists.right, maxValue)
+
+        // Calculate the similarity score for Part Two
+        val similarityScore  = organizedLists.left.sumOf { num ->
+            num * rightFrequencyArray.getOrElse(num) {0} // Multiply each number in the left list by its frequency in the right list
+        }
+        println("Performance - Part Two - Similarity Score: $similarityScore")
+    }
+
+    // Output the total execution time for the optimized implementation.
+    println("Performance - Execution time: $executionTimeWithPerformance ms")
 }
 
 // ===== PART ONE ======
@@ -83,4 +108,17 @@ fun calculateTotalDistance(leftList: List<Int>, rightList: List<Int>): Int {
  */
 fun countOccurrences(list: List<Int>): Map<Int, Int> {
     return list.groupingBy { it }.eachCount() // Groups and counts occurrences of each number
+}
+
+/**
+ * Counts the occurrences of each number in a list using an Array.
+ *
+ * @param list The list of integers.
+ * @param maxValue The maximum value in the list (defines the size of the array).
+ * @return An array where the index represents the number and the value represents its frequency.
+ */
+fun countOccurrencesWithArray(list: List<Int>, maxValue: Int): IntArray {
+    val frequencyArray = IntArray(maxValue + 1)
+    list.forEach { num -> frequencyArray[num]++ }
+    return frequencyArray
 }
