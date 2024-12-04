@@ -36,3 +36,24 @@ Portanto, neste exemplo, ``2`` relatórios são seguros.
 Analise os dados incomuns dos engenheiros. Quantos relatórios são seguros?
 
 Para começar, obtenha seu input de quebra-cabeça.
+
+--- Parte Dois ---
+
+Os engenheiros ficaram surpresos com o baixo número de relatórios seguros até perceberem que esqueceram de mencionar o **Problem Dampener**.
+
+O **Problem Dampener** é um módulo montado no reator que permite que os sistemas de segurança do reator tolerem um único nível ruim em um relatório que, de outra forma, seria seguro. É como se o nível ruim nunca tivesse acontecido!
+
+Agora, as mesmas regras se aplicam, exceto que, se remover um único nível de um relatório inseguro o tornasse seguro, o relatório será contado como seguro.
+
+Mais relatórios do exemplo acima agora são seguros:
+
+- **7 6 4 2 1**: Seguro sem remover nenhum nível.
+- **1 2 7 8 9**: Inseguro, independentemente de qual nível seja removido.
+- **9 7 6 2 1**: Inseguro, independentemente de qual nível seja removido.
+- **1 3 2 4 5**: Seguro ao remover o segundo nível, 3.
+- **8 6 4 4 1**: Seguro ao remover o terceiro nível, 4.
+- **1 3 6 7 9**: Seguro sem remover nenhum nível.
+
+Graças ao **Problem Dampener**, 4 relatórios são realmente seguros!
+
+Atualize sua análise para lidar com situações onde o **Problem Dampener** pode remover um único nível de relatórios inseguros. Quantos relatórios são agora seguros?
