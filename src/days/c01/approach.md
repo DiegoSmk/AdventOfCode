@@ -32,3 +32,31 @@ No exemplo, a distância total seria a soma das distâncias calculadas entre os 
 
 ### 5. **Conclusão**
 Após aplicar esses passos e calcular a distância entre todas as listas, você terá a distância total entre as duas listas de IDs de locais. Esse valor será o que você deverá reportar como resultado do desafio.
+
+--- Parte 2 ---
+
+### 1. **Leitura das Listas de ID**
+* A lista da esquerda: números que serão avaliados.
+* A lista da direita: números usados para contar as ocorrências.
+
+### 2. **Contar Ocorrência na Lista da Direita**
+* Use uma estrutura de contagem para calcular quantas vezes cada número aparece na lista da direita.
+* Resultado: um ```Map``` onde a chave é o número e o valor é o número de ocorrências.
+
+```kotlin
+val rightList = listOf(3, 5, 3, 9, 3, 3)
+val frequencyMap = rightList.groupingBy { it }.eachCount()
+```
+
+### 3. **Calcular o Score de Similariedade**
+* Para cada **número da esquerda**, siga os passos:
+1. Verifique se o número existe no ```Map``` de frequências. 
+2. Se existir, multiplique o número pela sua frequência. 
+3. Adicione o resultado ao score total. 
+4. Caso o número não exista, ele não contribui para o score (multiplicação por zero).
+
+### 4. **Resultado Final**
+Após processar todos os números da lista da esquerda, o valor final do ```similarityScore``` será o **score de similaridade**.
+
+
+
