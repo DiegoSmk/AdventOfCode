@@ -2,64 +2,85 @@ package days.c01
 
 import utils.readInput
 import kotlin.math.abs
-import kotlin.time.measureTime
+import kotlin.system.measureTimeMillis
 
 fun main () {
     // Measure code in milleSeconds.
-    val startTime = measureTime {
+    val executionTime = measureTimeMillis {
         // ===== PART ONE ======
-        val input = readInput("inputC1")
-        val organize = organizeList(input)
-        val calculateDistance = calculateTotalDistance(organize.left, organize.right)
-        println("Part One - $calculateDistance")
+        val input = readInput("inputC1") // Reads input data from a file or other source
+        val organizedLists = organizeList(input)  // Organizes the input into sorted left and right lists
+
+        // Calculate the total distance for Part One
+        val totalDistance = calculateTotalDistance(organizedLists.left, organizedLists.right)
+        println("Part One - Total Distance: $totalDistance")
 
         // ===== PART TWO ======
-        val rightFrequencyMap = countOccurrences(organize.right)
-        val score = organize.left.sumOf { num ->
-            num * rightFrequencyMap.getOrDefault(num, 0)
+        // Create a frequency map for the right list
+        val rightFrequencyMap = countOccurrences(organizedLists.right)
+
+        // Calculate the similarity score for Part Two
+        val similarityScore  = organizedLists.left.sumOf { num ->
+            num * rightFrequencyMap.getOrDefault(num, 0) // Multiply each number in the left list by its frequency in the right list
         }
-        println("Part Two - $score")
+        println("Part Two - Similarity Score: $similarityScore")
     }
 
-    println("Execution time: $startTime")
+    // Output the total execution time
+    println("Execution time: $executionTime ms")
 }
 
 // ===== PART ONE ======
-
+/**
+ * Data class to store the organized left and right lists.
+ */
 data class ResultListOrganize(
-    val left: List<Int>,
-    val right: List<Int>
+    val left: List<Int>, // Sorted left list
+    val right: List<Int> // Sorted right list
 )
 
+/**
+ * Organizes the input list into two sorted lists: left and right.
+ *
+ * @param list The input list of strings, where each string contains a pair of numbers separated by whitespace.
+ * @return A ResultListOrganize containing the sorted left and right lists.
+ */
 fun organizeList (list: List<String>): ResultListOrganize {
     val leftList = mutableListOf<Int>()
     val rightList = mutableListOf<Int>()
 
+    // Split each line into left and right numbers and populate respective lists
     list.forEach { line ->
-        val (left, right) = line.split("   ")
-
+        val (left, right) = line.split("   ") // Assumes a fixed format with three spaces as a delimiter
         leftList.add(left.toInt())
         rightList.add(right.toInt())
     }
 
+    // Sort both lists in ascending order
     leftList.sort()
     rightList.sort()
 
     return ResultListOrganize(leftList, rightList)
 }
 
-// Function to calculate the total distance.
+/**
+ * Calculates the total distance between two sorted lists.
+ *
+ * @param leftList The sorted left list.
+ * @param rightList The sorted right list.
+ * @return The total distance, which is the sum of absolute differences between corresponding elements.
+ */
 fun calculateTotalDistance(leftList: List<Int>, rightList: List<Int>): Int {
-    var totalDistance = 0
-
-    for (i in leftList.indices) {
-        totalDistance += abs(leftList[i] - rightList[i])
-    }
-    return totalDistance
+    return leftList.indices.sumOf { i -> abs(leftList[i] - rightList[i]) }
 }
 
 // ===== PART TWO ======
-
+/**
+ * Counts the occurrences of each number in a list.
+ *
+ * @param list The list of integers.
+ * @return A map where keys are the numbers and values are their respective counts.
+ */
 fun countOccurrences(list: List<Int>): Map<Int, Int> {
-    return list.groupingBy { it }.eachCount()
+    return list.groupingBy { it }.eachCount() // Groups and counts occurrences of each number
 }
