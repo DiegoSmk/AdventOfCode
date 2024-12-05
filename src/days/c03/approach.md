@@ -60,3 +60,21 @@ Após processar toda a memória e calcular as multiplicações, o resultado fina
 - Ignore quaisquer caracteres ou instruções que não estejam no formato `mul(X,Y)`.
 
 ---
+
+--- Parte 2 ---
+
+## Passo a Passo para Resolver o Desafio
+
+### 1. **Inicializar o Estado**
+- Por padrão, as instruções `mul` estão habilitadas.
+- O estado atual (`habilitado` ou `desabilitado`) será alterado por `do()` ou `don't()`.
+
+### 2. **Processar a Memória**
+- Percorra a memória em busca de instruções válidas:
+    - **`do()`**: Habilita futuras instruções `mul`.
+    - **`don't()`**: Desabilita futuras instruções `mul`.
+    - **`mul(X,Y)`**: Realiza a multiplicação apenas se o estado atual for habilitado.
+
+### 3. **Filtrar e Somar os Resultados**
+- Apenas multiplique os valores das instruções `mul` que estão habilitadas no momento em que aparecem na memória.
+- Some os resultados das multiplicações válidas.

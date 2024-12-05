@@ -18,3 +18,35 @@ xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))
 Apenas as quatro seções destacadas são instruções reais de `mul`. Somando o resultado de cada instrução, temos **161** (`2*4 + 5*5 + 11*8 + 8*5`).
 
 Analise a memória corrompida em busca de instruções `mul` válidas. **Qual é o resultado da soma de todas as multiplicações?**
+
+## Parte 2
+
+Ao examinar a memória corrompida, você percebe que algumas declarações condicionais ainda estão intactas. Se você lidar com algumas dessas declarações condicionais não corrompidas no programa, poderá obter um resultado ainda mais preciso.
+
+## Novas Instruções
+
+Existem duas novas instruções que você precisará lidar:
+
+1. **A instrução `do()` habilita futuras instruções `mul`.**
+2. **A instrução `don't()` desabilita futuras instruções `mul`.**
+
+Somente a instrução `do()` ou `don't()` mais recente se aplica. No início do programa, as instruções `mul` estão habilitadas por padrão.
+
+## Exemplo
+
+Considere a seguinte memória corrompida:
+```
+xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))
+```
+Neste caso:
+- As instruções `mul(5,5)` e `mul(11,8)` estão desabilitadas porque há uma instrução `don't()` antes delas.
+- As outras instruções `mul` funcionam normalmente, incluindo a última `mul(8,5)`, que é reabilitada por uma instrução `do()`.
+
+A soma dos resultados válidos é:
+```
+(2 * 4) + (8 * 5) = 48
+```
+Lide com as novas instruções; **o que você obtém se somar todos os resultados apenas das multiplicações habilitadas?**
+
+
+---
