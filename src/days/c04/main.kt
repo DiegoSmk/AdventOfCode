@@ -8,34 +8,40 @@ fun main() {
     val inputTest = readInput("inputC4e")
     val input = readInput("inputC4")
     val resultTest = 18
+    val resultTestTwo = 9
 
     measureExecutionTime({
         val result = findXmas(inputTest)
         val answer = findXmas(input)
-        printTestResult(result, 18)
+        printTestResult(result, resultTest)
         println("Total occurrences of 'XMAS': $answer")
-    }, "MAIN")
+    }, "MAIN - PART 1")
+    println("==============================================")
+
+    printTestResult(countXMasOccurrences(inputTest), resultTestTwo)
+    measureExecutionTime({
+        val resultNewTest = countXMasOccurrences(input)
+        println("Total occurrences of 'XMAS': $resultNewTest")
+    }, "MAIN - PART 2")
     println("==============================================")
 
     measureExecutionTime({
         val word = "XMAS"
         val occurrences = countWordOccurrences(inputTest, word)
         val answer = countWordOccurrences(input, word)
-        printTestResult(occurrences, 18)
+        printTestResult(occurrences, resultTest)
         println("Total occurrences of 'XMAS': $answer")
     }, "ChatGPT")
     println("==============================================")
 
-
     measureExecutionTime({
-        val resultDace = day3Part1Dace(inputTest)
-        val answer = day3Part1Dace(input)
+        val resultDace = day4Part1Dace(inputTest)
+        val answer = day4Part1Dace(input)
 
-        printTestResult(resultDace, 18)
+        printTestResult(resultDace, resultTest)
         println("Total occurrences of 'XMAS': $answer")
     }, "Dace Leeds")
     println("==============================================")
-
 
     measureExecutionTime({
         val grid1 = Grid(inputTest.map {
@@ -45,28 +51,56 @@ fun main() {
             it.toCharArray().toList()
         })
 
-        val resultSebastian = day3part1Sebi(grid1)
-        val answer = day3part1Sebi(grid2)
+        val resultSebastian = day4part1Sebi(grid1)
+        val answerOne = day4part1Sebi(grid2)
+        val answerTwo = day4Part2Sebi(grid2)
 
-        printTestResult(resultSebastian, 18)
-        println("Total occurrences of 'XMAS': $answer")
+        printTestResult(resultSebastian, resultTest)
+        println("Total occurrences of 'XMAS': $answerOne")
+        println("Total occurrences of 'X-MAS': $answerTwo")
     }, "Sebastian")
     println("==============================================")
-
 }
+// PART ONE ============================================================================================================
+/**
+ * Checks if the given coordinates are within the bounds of the grid.
+ *
+ * @param row The row index to check.
+ * @param col The column index to check.
+ * @param rows The total number of rows in the grid.
+ * @param cols The total number of columns in the grid.
+ * @return True if the coordinates are valid, false otherwise.
+ */
+fun isValid(row: Int, col: Int, rows: Int, cols: Int): Boolean = row in 0..<rows && col in 0..<cols
 
+/**
+ * Finds the total occurrences of the word "XMAS" in the grid.
+ * The word can appear horizontally, vertically, diagonally,
+ * and even backwards in any of these directions.
+ *
+ * @param grid The grid of characters where the word will be searched.
+ * @return The total number of occurrences of "XMAS".
+ */
 fun findXmas(grid: List<String>): Int {
     val rows = grid.size
     val cols = grid[0].length
     val word = "XMAS"
 
-    fun isValid(row: Int, col: Int): Boolean = row in 0..<rows && col in 0..<cols
-
+    /**
+     * Checks if the word "XMAS" exists starting from a specific position
+     * in the given direction.
+     *
+     * @param row The starting row index.
+     * @param col The starting column index.
+     * @param dr The row direction increment.
+     * @param dc The column direction increment.
+     * @return True if the word is found, false otherwise.
+     */
     fun check(row: Int, col: Int, dr: Int, dc: Int): Boolean {
         var r = row
         var c = col
         for (i in word.indices) {
-            if (!isValid(r, c) || grid[r][c] != word[i]) return false
+            if (!isValid(r, c, rows, cols) || grid[r][c] != word[i]) return false
             r += dr
             c += dc
         }
@@ -87,6 +121,7 @@ fun findXmas(grid: List<String>): Int {
         Pair(-1, 1)
     )
 
+    // Iterate through all grid cells.
     for (row in 0..<rows) {
         for (col in 0..<cols) {
             for ((dr, dc) in directions) {
@@ -100,7 +135,81 @@ fun findXmas(grid: List<String>): Int {
     return count
 }
 
-// ChatGPT
+// PART TWO ============================================================================================================
+/**
+ * Class responsible for storing and managing all possible X-MAS patterns.
+ */
+class XmasPatterns {
+
+    // List of valid X-MAS patterns represented as concatenated strings.
+    private val patterns: List<String> = listOf(
+        "MSAMS", // Standard X-MAS pattern
+        "SMASM", // Inverted X-MAS pattern
+        "MMASS", // Mixed diagonal pattern
+        "SSAMM"  // Mixed diagonal inverted pattern
+    )
+
+    /**
+     * Concatenates a 3x3 sub-matrix into a string for pattern matching.
+     * The resulting string is created using the 5 key characters:
+     * - First and last character of the first row
+     * - Middle character of the middle row
+     * - First and last character of the last row
+     *
+     * @param subMatrix The 3x3 sub-matrix as a list of strings.
+     * @return A concatenated string representation of the X-MAS shape.
+     */
+    private fun concatenate(subMatrix: List<String>): String {
+        val (firstRow, middleRow, lastRow) = subMatrix
+        return StringBuilder()
+            .append(firstRow.first())
+            .append(firstRow.last())
+            .append(middleRow[1])
+            .append(lastRow.first())
+            .append(lastRow.last())
+            .toString()
+    }
+
+    /**
+     * Checks if a given 3x3 sub-matrix matches any valid X-MAS pattern.
+     *
+     * @param subMatrix The 3x3 sub-matrix to validate.
+     * @return True if it matches any pattern, false otherwise.
+     */
+    fun matchesAnyPattern(subMatrix: List<String>): Boolean {
+        val concatString = concatenate(subMatrix)
+        return patterns.any { pattern -> concatString == pattern }
+    }
+}
+
+/**
+ * Counts the total number of X-MAS patterns found in the given matrix.
+ *
+ * @param matrix The input matrix of characters as a list of strings.
+ * @return The total number of X-MAS patterns found.
+ */
+fun countXMasOccurrences(matrix: List<String>): Int {
+    var count = 0
+    val rows = matrix.size
+    val cols = matrix[0].length
+    val xmasPatterns = XmasPatterns()
+
+    // Iterate through all possible 3x3 sub-matrices
+    for (i in 0..<rows - 2) {
+        for (j in 0..<cols - 2) {
+            // Extract the 3x3 sub-matrix
+            val subMatrix = List(3) { row -> matrix[i + row].substring(j, j + 3) }
+
+            // Check if the sub-matrix matches any X-MAS pattern
+            if (xmasPatterns.matchesAnyPattern(subMatrix)) {
+                count++
+            }
+        }
+    }
+    return count
+}
+
+// ChatGPT ==========================================================================
 /**
  * Counts all occurrences of a word in the grid, considering all possible directions.
  */
@@ -156,20 +265,19 @@ fun findWord(grid: List<String>, word: String, startRow: Int, startCol: Int, dir
     return true
 }
 
-// Dace Leeds
-fun day3Part1Dace(input: List<String>): Int {
+// Dace Leeds ==========================================================================
+fun day4Part1Dace(input: List<String>): Int {
 
-    val leftToRight = input
     val rightToLeft = input.map {it.reversed()}
     val topToBotton = input.pivot()
     val bottonToTop = topToBotton.map {it.reversed()}
 
     val bottonLeftToTopRight = input.tippedRight()
     val topRightToBottonLeft = bottonLeftToTopRight.map { it.reversed() }
-    val topLeftToBottonRight = input.tippedRight()
+    val topLeftToBottonRight = input.tippedLeft()
     val bottonRightToTopLeft = topLeftToBottonRight.map { it.reversed() }
 
-    val all = leftToRight + rightToLeft + topToBotton + bottonToTop + bottonLeftToTopRight + topRightToBottonLeft + topLeftToBottonRight + bottonRightToTopLeft
+    val all = input + rightToLeft + topToBotton + bottonToTop + bottonLeftToTopRight + topRightToBottonLeft + topLeftToBottonRight + bottonRightToTopLeft
 
     return all.sumOf { Regex("XMAS").findAll(it).count() }
 }
@@ -217,7 +325,37 @@ fun List<String>.tippedRight(): List<String> {
     }
 }
 
-// Sebastian (@sebi.io)
+fun List<String>.tippedLeft(): List<String> {
+    val characters = this
+    val width = characters.first().length
+    val height = characters.size
+    return buildList {
+        for (x in characters[0].indices.reversed()) {
+            add(buildString {
+                var cx = x
+                var cy = 0
+                do {
+                    append(characters[cy][cx])
+                    cx += 1
+                    cy += 1
+                } while (cx < width && cy < height)
+            })
+        }
+        for (y in characters.indices.drop(1)) {
+            add(buildString {
+                var cx = 0
+                var cy = y
+                do {
+                    append(characters[cy][cx])
+                    cx += 1
+                    cy += 1
+                } while (cx < width && cy < height)
+            })
+        }
+    }
+}
+
+// Sebastian (@sebi.io) ==========================================================================
 data class Vec2(val x: Int, val y: Int)
 
 data class Grid(private val elems: List<List<Char>>) {
@@ -243,8 +381,8 @@ data class Grid(private val elems: List<List<Char>>) {
     private fun getAtPos(x: Int, y: Int): Char? = elems.getOrNull(y)?.getOrNull(x)
 
     fun countXmasWordsForPosition(startX: Int, startY: Int): Int {
-        return allowedDirections.count() { directions ->
-            checkXmasWordForDirection(startX, startY, directions)
+        return allowedDirections.count { direction ->
+            checkXmasWordForDirection(startX, startY, direction)
         }
     }
 
@@ -261,11 +399,31 @@ data class Grid(private val elems: List<List<Char>>) {
         }
         return true
     }
+
+    fun isMASCrossAtPosition(centerX: Int, centerY: Int): Boolean {
+        if (getAtPos(centerX, centerY) != 'A') {
+            return false // invalid cross-center
+        }
+        // we start at the 'A' of 'MAS', because it is the center.
+        val isFallingDiagonalMAS =
+            getAtPos(centerX - 1, centerY - 1) == 'M' && getAtPos(centerX + 1, centerY + 1) == 'S'
+        val isFallingDiagonalSAM =
+            getAtPos(centerX - 1, centerY - 1) == 'S' && getAtPos(centerX + 1, centerY + 1) == 'M'
+        val fallingDiagonalOk = isFallingDiagonalMAS || isFallingDiagonalSAM
+
+        val isRisingDiagonalMAS =
+            getAtPos(centerX - 1, centerY + 1) == 'M' && getAtPos(centerX + 1, centerY - 1) == 'S'
+        val isRisingDiagonalSAM =
+            getAtPos(centerX - 1, centerY + 1) == 'S' && getAtPos(centerX + 1, centerY - 1) == 'M'
+        val risingDiagonalOk = isRisingDiagonalMAS || isRisingDiagonalSAM
+
+        return risingDiagonalOk && fallingDiagonalOk
+    }
 }
 
 
 
-fun day3part1Sebi(grid: Grid): Int {
+fun day4part1Sebi(grid: Grid): Int {
     var xmasWordCount = 0
 
     for ((startX, startY) in grid.indices) {
@@ -273,4 +431,13 @@ fun day3part1Sebi(grid: Grid): Int {
     }
 
     return xmasWordCount
+}
+
+fun day4Part2Sebi(grid: Grid): Int {
+    var crossCount = 0
+    for ((centerX, centerY) in grid.indices) {
+        crossCount += if (grid.isMASCrossAtPosition(centerX, centerY)) 1 else 0
+    }
+
+    return crossCount
 }

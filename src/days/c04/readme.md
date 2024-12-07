@@ -50,3 +50,40 @@ S.S.S.S.SS
 .X.X.XMASX
 ```
 Ajude o pequeno Elfo a resolver seu desafio. Quantas vezes a palavra **XMAS** aparece no caça-palavras?
+
+# Parte Dois: X-MAS
+
+O pequeno Elfo olha para você com curiosidade. Será que você entendeu errado a tarefa?
+
+Procurando pelas instruções, você vira o caça-palavras e descobre que não é realmente um enigma sobre **XMAS**, mas sim sobre **X-MAS**, no qual você precisa encontrar dois **MAS** dispostos na forma de um "X".
+
+Uma maneira de alcançar isso seria assim:
+```
+M.S
+.A.
+M.S
+```
+No diagrama acima, os caracteres irrelevantes foram substituídos por `.` novamente. Dentro do "X", cada **MAS** pode ser escrito tanto na ordem normal quanto de trás para frente.
+---
+
+## Exemplo de Entrada e Saída
+
+### Entrada
+O mesmo exemplo fornecido anteriormente para o caça-palavras. Aqui estão as ocorrências de **X-MAS** destacadas:
+```
+.M.S......
+..A..MSMS.
+.M.S.MAA..
+..A.ASMSM.
+.M.S.M....
+..........
+S.S.S.S.S.
+.A.A.A.A..
+M.M.M.M.M.
+..........
+```
+### Saída
+Neste exemplo, a forma **X-MAS** aparece **9 vezes**.
+
+---
+Vire a caça-palavras das instruções de volta para o lado da caça-palavras e tente novamente. **Quantas vezes um X-MAS aparece?**
