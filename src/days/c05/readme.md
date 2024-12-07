@@ -86,3 +86,17 @@ Essas têm os números da página do meio de `61`, `53` e `29`, respectivamente.
 Claro, você precisará ter cuidado: a lista real de **regras de ordenação das páginas** é maior e mais complicada do que o exemplo acima.
 
 **Determine quais atualizações já estão na ordem correta. O que você obtém se somar o número da página do meio dessas atualizações corretamente ordenadas?**
+
+# Parte Dois
+
+Enquanto os Elfos começam a imprimir as atualizações ordenadas corretamente, você tem um pouco de tempo para corrigir o restante.
+
+Para cada uma das atualizações que estão fora de ordem, use as regras de ordenação das páginas para colocá-las na ordem correta. No exemplo acima, estas são as três atualizações fora de ordem e suas respectivas ordens corrigidas:
+
+- `75,97,47,61,53` torna-se `97,75,47,61,53`.
+- `61,13,29` torna-se `61,29,13`.
+- `97,13,75,29,47` torna-se `97,75,47,29,13`.
+
+Após considerar apenas as atualizações fora de ordem e ordená-las corretamente, os números das páginas centrais são `47`, `29` e `47`. Somando esses valores, temos o resultado `123`.
+
+Encontre as atualizações que não estão na ordem correta. Qual é o resultado da soma dos números centrais após corrigir a ordem apenas dessas atualizações?
