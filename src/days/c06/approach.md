@@ -49,3 +49,18 @@ Este desafio envolve simular o movimento de um guarda em um laboratório, com ba
 5. Parar quando o guarda sair do mapa.
 6. Contar o número de posições distintas visitadas.
 7. Exibir o resultado final.
+
+--- Parte Dois ---
+
+# Passos para Solucionar o Desafio - Parte Dois
+
+## **Simular o Movimento do Guarda**
+- Para cada posição candidata onde um obstáculo poderia ser colocado, simule o movimento do guarda começando da posição inicial.
+- Durante a simulação:
+  1. O guarda se move de acordo com as regras mencionadas.
+  2. Verifique se, em algum ponto, ele volta à mesma posição onde já esteve. Se isso ocorrer, significa que ele entrou em um loop.
+
+- O obstáculo não pode ser colocado na posição inicial do guarda, pois ele estaria lá e perceberia.
+
+## **Contar as Posições**
+- O número de posições válidas para colocar o obstáculo é a resposta para o problema. Isso deve incluir todas as posições onde o guarda ficaria preso em um loop.

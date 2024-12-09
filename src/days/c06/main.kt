@@ -11,8 +11,6 @@ fun main() {
     val inputText = readInput("inputC6e")
     val input = readInput("inputC6")
 
-    println(inputText)
-
     measureExecutionTime({
         val resultTest = countVisitedPositions(inputText)
         println("Distinct positions visited: $resultTest")
@@ -22,119 +20,208 @@ fun main() {
     printLine()
 
     measureExecutionTime({
-        val mapGrid = MapGrid(input)
-        val result = mapGrid.run()
+        val guardPatrol = GuardPatrol(input)
+        val result = guardPatrol.calculateDistinctVisitedPositions()
         println("Distinct positions visited: $result")
 
-    }, "MAIN - PART ONE - 1")
+    }, "MAIN - PART ONE - Used class GuardPatrol")
     printLine()
 
     measureExecutionTime({
         val result = countVisitedPositions(input)
         println("Distinct positions visited: $result")
 
-    }, "MAIN - PART ONE - 2")
+    }, "MAIN - PART ONE - Used fun countVisitedPositiion")
     printLine()
 
     measureExecutionTime({
-        val resultTest = 0
-        printTestResult(resultTest, 0)
+        val guardPatro = GuardPatrol(inputText)
+        val resultTest = guardPatro.findValidObstaclePositions().size
+        printTestResult(resultTest, 6)
     }, "MAIN - PART TWO - Test")
     printLine()
 
-    measureExecutionTime({}, "MAIN - PART TWO")
+    measureExecutionTime({
+        val guardPatrol = GuardPatrol(input)
+        val result = guardPatrol.findValidObstaclePositions().size
+
+        println(result)
+    }, "MAIN - PART TWO")
     printLine()
 }
 
 // MAIN - code 1 ===================================================================
 /**
- * Represents a grid map with obstacles, an initial guard position, and patrol logic.
- *
- * @param grid A list of strings representing the lab's grid.
+ * Represents a position on the grid with x and y coordinates.
  */
-class MapGrid(private val grid: List<String>) {
-    // Directions as (dx, dy) representing movement on a 2D plane
-    private val directions = listOf(
-        Pair(-1, 0), // Up
-        Pair(0, 1),  // Right
-        Pair(1, 0),  // Down
-        Pair(0, -1)  // Left
-    )
+data class Position(val x: Int, val y: Int)
 
-    // Initial guard state
-    private var guardX: Int = 0
-    private var guardY: Int = 0
-    private var guardDirection: Int = 0 // Index of the directions list
+/**
+ * Enumeration representing the four cardinal directions and their respective movement offsets.
+ */
+enum class Direction(val dx: Int, val dy: Int) {
+    UP(0, -1), RIGHT(1, 0), DOWN(0, 1), LEFT(-1, 0);
 
-    init {
-        initializeGuard()
+    fun turnRight(): Direction {
+        return when (this) {
+            UP -> RIGHT
+            RIGHT -> DOWN
+            DOWN -> LEFT
+            LEFT -> UP
+        }
+    }
+}
+
+/**
+ * Represents a record of a position visited by the guard during patrol,
+ * including its direction and whether it caused a loop.
+ */
+data class PatrolLog(val position: Position, val direction: Direction, private var isLoop: Boolean = false) {
+    /**
+     * Marks the current patrol log as part of a loop.
+     */
+    fun markAsLoop() {
+        this.isLoop = true
     }
 
     /**
-     * Locates the guard's initial position and direction on the grid.
+     * Checks if this patrol log is a loop.
+     * @return True if it's a loop, false otherwise.
      */
-    private fun initializeGuard() {
-        for (i in grid.indices) {
-            for (j in grid[i].indices) {
-                when (grid[i][j]) {
-                    '^' -> {
-                        guardX = i
-                        guardY = j
-                        guardDirection = 0 // Up
-                        return
-                    }
-                    '>' -> {
-                        guardX = i
-                        guardY = j
-                        guardDirection = 1 // Right
-                        return
-                    }
-                    'v' -> {
-                        guardX = i
-                        guardY = j
-                        guardDirection = 2 // Down
-                        return
-                    }
-                    '<' -> {
-                        guardX = i
-                        guardY = j
-                        guardDirection = 3 // Left
-                        return
+    fun isLopp(): Boolean = isLoop
+}
+
+/**
+ * Represents a patrol grid map for a guard. Handles simulation of guard movements
+ * and identifies valid positions for adding obstacles to create a loop.
+ *
+ * @param grid The grid map represented as a list of strings.
+ */
+class GuardPatrol(private val grid: List<String>) {
+    private val guardSymbols = setOf('^', 'v', '<', '>')
+    private val obstacleSymbols = setOf('#')
+
+    /**
+     * Finds the starting position of the guard on the grid.
+     * @return The starting position as a [Position].
+     */
+    private fun findGuardStartingPosition(): Position {
+        for (y in grid.indices) {
+            for (x in grid[y].indices) {
+                if (grid[y][x] in guardSymbols) {
+                    return Position(x, y)
+                }
+            }
+        }
+        throw IllegalStateException("Guard starting position not found on the grid.")
+    }
+
+    /**
+     * Determines the initial direction of the guard based on its symbol.
+     * @param position The position of the guard.
+     * @return The guard's initial direction as a [Direction].
+     */
+    private fun determineGuardDirection(position: Position): Direction {
+        return when (grid[position.y][position.x]) {
+            '^' -> Direction.UP
+            'v' -> Direction.DOWN
+            '<' -> Direction.LEFT
+            '>' -> Direction.RIGHT
+            else -> throw IllegalStateException("Invalid guard direction at position.")
+        }
+    }
+
+    /**
+     * Checks if a position is out of bounds on the grid.
+     * @param position The position to check.
+     * @return True if the position is outside the grid, false otherwise.
+     */
+    private fun isOutOfBounds(position: Position): Boolean {
+        return position.x !in grid[0].indices || position.y !in grid.indices
+    }
+
+    /**
+     * Checks if a position contains an obstacle.
+     * @param position The position to check.
+     * @return True if the position contains an obstacle, false otherwise.
+     */
+    private fun isObstacle(position: Position): Boolean {
+        if (isOutOfBounds(position)) return false
+        return grid[position.y][position.x] in obstacleSymbols
+    }
+
+    /**
+     * Counts the number of unique positions visited by the guard.
+     * @param patrolLogs The set of patrol logs.
+     * @return The count of distinct positions visited.
+     */
+    private fun countDistinctVisitedPositions(patrolLogs: Set<PatrolLog>): Int {
+        return patrolLogs.map { it.position }.toSet().size
+    }
+
+    /**
+     * Simulates the guard's patrol movements, optionally adding a new obstacle.
+     * @param additionalObstacle The position of the additional obstacle, if any.
+     * @return A set of [PatrolLog] representing the guard's movements.
+     */
+    private fun simulateGuardMoviment(additionalObstacle: Position? = null): Set<PatrolLog> {
+        val patrolLogs = mutableSetOf<PatrolLog>()
+        var guardPosition = findGuardStartingPosition()
+        var guardDirection = determineGuardDirection(guardPosition)
+
+        while (true) {
+            if (isOutOfBounds(guardPosition)) break
+
+            val nextPosition = Position(guardPosition.x + guardDirection.dx, guardPosition.y + guardDirection.dy)
+            val currentLog = PatrolLog(guardPosition, guardDirection)
+
+            // Check for loop
+            if (patrolLogs.contains(currentLog)) {
+                patrolLogs.last().markAsLoop()
+                return patrolLogs
+            }
+            patrolLogs.add(currentLog)
+
+            // Handle obstacle or move forward
+            if (isObstacle(nextPosition) || nextPosition == additionalObstacle) {
+                guardDirection = guardDirection.turnRight()
+            } else {
+                guardPosition = nextPosition
+            }
+        }
+
+        return patrolLogs
+    }
+
+    /**
+     * Runs the patrol simulation without additional obstacles.
+     * @return The number of distinct positions visited by the guard.
+     */
+    fun calculateDistinctVisitedPositions(): Int {
+        return countDistinctVisitedPositions(simulateGuardMoviment())
+    }
+
+    /**
+     * Finds all valid positions for placing an obstacle to cause a loop.
+     * @return A list of valid [Position] for placing obstacles.
+     */
+    fun findValidObstaclePositions(): List<Position> {
+        val validPositions = mutableListOf<Position>()
+        val guardStart = findGuardStartingPosition()
+
+        for (y in grid.indices) {
+            for (x in grid[y].indices) {
+                val position = Position(x, y)
+                if (grid[y][x] == '.' && position != guardStart) {
+                    val simulationResult  = simulateGuardMoviment(position)
+                    if (simulationResult.last().isLopp()) {
+                        validPositions.add(position)
                     }
                 }
             }
         }
 
-        throw IllegalStateException("Guard position not found in the map.")
-    }
-
-    /**
-     * Runs the simulation and returns the number of distinct positions visited by the guard.
-     */
-    fun run(): Int {
-        val visited = mutableSetOf<Pair<Int, Int>>()
-        visited.add(Pair(guardX, guardY))
-
-        while (true) {
-            val nextX = guardX + directions[guardDirection].first
-            val nextY = guardY + directions[guardDirection].second
-
-            // Check if the guard is moving out of bounds
-            if (nextX !in grid.indices || nextY !in grid[nextX].indices) break
-
-            // Check if there's an obstacle in the next position
-            if (grid[nextX][nextY] == '#') {
-                // Turn right
-                guardDirection = (guardDirection + 1) % directions.size
-            } else {
-                // Move forward
-                guardX = nextX
-                guardY = nextY
-                visited.add(Pair(guardX, guardY))
-            }
-        }
-
-        return visited.size
+        return validPositions
     }
 }
 

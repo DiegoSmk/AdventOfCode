@@ -106,3 +106,105 @@ Prevendo a rota do guarda, você pode determinar quais posições específicas n
 Neste exemplo, o guarda visitará **41 posições distintas** no mapa.
 
 **Preveja o caminho do guarda. Quantas posições distintas o guarda visitará antes de sair da área mapeada?**
+
+--- Parte Dois ---
+
+Enquanto os Historiadores começam a trabalhar ao redor da rota de patrulha do guarda, você pega o dispositivo deles e sai do laboratório. Da segurança de um armário de suprimentos, você viaja no tempo pelos últimos meses e `registra` o status noturno do posto de guarda nas paredes do armário.
+
+Ao retornar, depois do que parece ter sido apenas alguns segundos para os Historiadores, eles explicam que a área de patrulha do guarda é simplesmente grande demais para que possam procurar pelo laboratório com segurança sem serem pegos.
+
+Felizmente, eles estão **bastante certos** de que adicionar uma única nova obstrução **não causará** um paradoxo temporal. Eles gostariam de colocar a nova obstrução de maneira que o guarda fique **preso em um loop**, tornando o restante do laboratório seguro para pesquisa.
+
+Para ter a menor chance de criar um paradoxo temporal, os Historiadores gostariam de saber **todas** as posições possíveis para tal obstrução. A nova obstrução não pode ser colocada na posição inicial do guarda - o guarda está lá agora e notaria.
+
+No exemplo acima, existem apenas 6 diferentes posições onde uma nova obstrução faria o guarda ficar preso em um loop. Os diagramas dessas seis situações usam O para marcar a nova obstrução, | para mostrar uma posição onde o guarda se move para cima/para baixo, - para mostrar uma posição onde o guarda se move para a esquerda/direita, e + para mostrar uma posição onde o guarda se move tanto para cima/para baixo quanto para a esquerda/direita.
+
+Opção um, coloque uma impressora ao lado da posição inicial do guarda:
+```
+....#.....
+....+---+#
+....|...|.
+..#.|...|.
+....|..#|.
+....|...|.
+.#.O^---+.
+........#.
+#.........
+......#...
+```
+Opção dois, coloque uma pilha de protótipos de traje falhados no quadrante inferior direito da área mapeada:
+```
+....#.....
+....+---+#
+....|...|.
+..#.|...|.
+..+-+-+#|.
+..|.|.|.|.
+.#+-^-+-+.
+......O.#.
+#.........
+......#...
+```
+Opção três, coloque uma caixa de tecido para protótipos de chimineia no canto inferior direito:
+```
+....#.....
+....+---+#
+....|...|.
+..#.|...|.
+..+-+-+#|.
+..|.|.|.|.
+.#+-^-+-+.
+.+----+O#.
+#+----+...
+......#...
+```
+Opção quatro, coloque um retroencabulator alquímico perto do canto inferior esquerdo:
+```
+....#.....
+....+---+#
+....|...|.
+..#.|...|.
+..+-+-+#|.
+..|.|.|.|.
+.#+-^-+-+.
+..|...|.#.
+#O+---+...
+......#...
+```
+Opção cinco, coloque o retroencabulator alquímico um pouco à direita:
+```
+....#.....
+....+---+#
+....|...|.
+..#.|...|.
+..+-+-+#|.
+..|.|.|.|.
+.#+-^-+-+.
+....|.|.#.
+#..O+-+...
+......#...
+```
+
+
+Opção seis, coloque um tanque de cola soberana ao lado do tanque de solvente universal:
+```
+....#.....
+....+---+#
+....|...|.
+..#.|...|.
+..+-+-+#|.
+..|.|.|.|.
+.#+-^-+-+.
+.+----++#.
+#+----++..
+......#O..
+```
+Não importa muito o que você escolha usar como obstáculo, desde que você e os Historiadores possam colocá-lo em posição sem que o guarda perceba. O importante é ter opções suficientes para encontrar uma que minimize os paradoxos temporais, e neste exemplo, existem 6 diferentes posições que você poderia escolher.
+
+Você precisa fazer o guarda ficar preso em um loop adicionando uma única nova obstrução. Quantas posições diferentes você poderia escolher para essa obstrução?
+
+
+
+
+
+
