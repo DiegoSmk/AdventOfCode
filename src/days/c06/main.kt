@@ -35,8 +35,8 @@ fun main() {
     printLine()
 
     measureExecutionTime({
-        val guardPatro = GuardPatrol(inputText)
-        val resultTest = guardPatro.findValidObstaclePositions().size
+        val guardPatrol = GuardPatrol(inputText)
+        val resultTest = guardPatrol.findValidObstaclePositions().size
         printTestResult(resultTest, 6)
     }, "MAIN - PART TWO - Test")
     printLine()
