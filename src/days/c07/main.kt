@@ -15,14 +15,14 @@ fun main() {
         val resultTest = solveBridgeRepair(equation)
         printTestResult(resultTest.toInt(), 3749)
 
-        println("Total calibration result: $resultTest")
+        println("Total calibration result (Part One - Test): $resultTest")
     }, "MAIN - PART ONE - Test")
     printLine()
 
     measureExecutionTime({
         val equation = parseEquations(input)
         val result = solveBridgeRepair(equation)
-        println("Total calibration result: $result")
+        println("Total calibration result (Part One): $result")
     }, "MAIN - PART ONE")
     printLine()
 
@@ -31,14 +31,14 @@ fun main() {
         val resultTest = solveBridgeRepair(equation, true)
         printTestResult(resultTest.toInt(), 11387)
 
-        println("Total calibration result: $resultTest")
+        println("Total calibration result (Part Two - Test): $resultTest")
     }, "MAIN - PART TWO - Test")
     printLine()
 
     measureExecutionTime({
         val equation = parseEquations(input)
         val result = solveBridgeRepair(equation, true)
-        println("Total calibration result: $result")
+        println("Total calibration result (Part Two): $result")
     }, "MAIN - PART TWO")
     printLine()
 }
@@ -70,21 +70,21 @@ fun parseEquations(input: List<String>): List<Equation> {
  * Evaluates a given expression left-to-right for a specific operator combination.
  *
  * @param numbers The list of numbers in the expression.
- * @param operators The list of operators (`+`, `*`, `||`) encoded as a base-N integer.
+ * @param operatorCombination Encoded operators (`+`, `*`, `||`) represented as a base-N integer.
  * @param operatorBase The base for operator encoding: 2 for `+` and `*`, 3 for `+`, `*`, and `||`.
  * @return The result of evaluating the expression.
  */
-fun evaluateExpression(numbers: List<Long>, operators: Int, operatorBase: Int): Long {
+fun evaluateExpression(numbers: List<Long>, operatorCombination: Int, operatorBase: Int): Long {
     var result = numbers[0]
 
     for (i in 1..<numbers.size) {
-        val operator = (operators / operatorBase.toDouble().pow(i - 1).toInt()) % operatorBase
+        val operator = (operatorCombination / operatorBase.toDouble().pow(i - 1).toInt()) % operatorBase
 
         result = when (operator) {
             0 -> result + numbers[i]
             1 -> result * numbers[i]
             2 -> (result.toString() + numbers[i].toString()).toLong() // Concatenation
-            else -> result
+            else -> error("Invalid operator: $operator")
         }
     }
     return result
@@ -94,17 +94,17 @@ fun evaluateExpression(numbers: List<Long>, operators: Int, operatorBase: Int): 
  * Checks if the given equation is valid by testing all possible operator combinations.
  *
  * @param equation The equation to validate.
- * @param concatenatable Whether concatenation is allowed.
+ * @param allowConcatenation Whether concatenation (`||`) is allowed.
  * @return True if the equation can be made valid, false otherwise.
  */
-fun isValidEquation(equation: Equation, concatenatable: Boolean = false): Boolean {
-    val n = equation.numbers.size
-    val operatorBase = if (concatenatable) 3 else 2 // Base for operator encoding
-    val maxCombinations = operatorBase.toDouble().pow(n - 1).toInt()
+fun isValidEquation(equation: Equation, allowConcatenation: Boolean = false): Boolean {
+    val numberOfOperators = equation.numbers.size - 1
+    val operatorBase = if (allowConcatenation) 3 else 2
+    val maxOperatorCombinations = operatorBase.toDouble().pow(numberOfOperators).toInt()
 
     // Test all combinations of operators
-    for (operators in 0..<maxCombinations) {
-        if (evaluateExpression(equation.numbers, operators, operatorBase) == equation.target) {
+    for (operatorCombination in 0..<maxOperatorCombinations) {
+        if (evaluateExpression(equation.numbers, operatorCombination, operatorBase) == equation.target) {
             return true
         }
     }
@@ -112,14 +112,14 @@ fun isValidEquation(equation: Equation, concatenatable: Boolean = false): Boolea
 }
 
 /**
- * Solves the bridge repai  r problem by summing the valid equation targets.
+ * Solves the bridge repair problem by summing the valid equation targets.
  *
  * @param equations A list of equations to process.
- * @param concatenatable Whether concatenation is allowed.
+ * @param allowConcatenation Whether concatenation (`||`) is allowed.
  * @return The total sum of target values for valid equations.
  */
-fun solveBridgeRepair(equations: List<Equation>, concatenatable: Boolean = false): Long {
+fun solveBridgeRepair(equations: List<Equation>, allowConcatenation: Boolean = false): Long {
     return equations.asSequence()
-        .filter { isValidEquation(it, concatenatable) } // Keep only valid equations
+        .filter { isValidEquation(it, allowConcatenation) } // Keep only valid equations
         .sumOf { it.target }            // Sum their target values
 }
