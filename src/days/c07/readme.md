@@ -48,3 +48,21 @@ No exemplo acima, a soma dos valores de teste para as três equações listadas 
 ---
 
 Determine quais equações podem ser verdadeiras. Qual é o resultado total de calibração?
+
+---
+--- Parte Dois ---
+
+Os engenheiros estão preocupados; o resultado total da calibração que você forneceu está longe de estar dentro dos limites de segurança. Nesse momento, você percebe seu erro: alguns elefantes bem escondidos estão usando um terceiro tipo de operador.
+
+O operador de concatenação (`||`) combina os dígitos à sua esquerda e à sua direita em um único número. Por exemplo, `12 || 345` se tornaria `12345`. Todos os operadores ainda são avaliados da esquerda para a direita.
+
+Agora, além das três equações que poderiam ser feitas verdadeiras usando apenas adição e multiplicação, o exemplo acima possui mais três equações que podem ser feitas verdadeiras ao inserir operadores:
+
+- **156**: 15 6 pode ser feito verdadeiro através de uma única concatenação: `15 || 6 = 156`.
+- **7290**: 6 8 6 15 pode ser feito verdadeiro usando `6 * 8 || 6 * 15`.
+- **192**: 17 8 14 pode ser feito verdadeiro usando `17 || 8 + 14`.
+
+Somando todos os seis valores de teste (os três que poderiam ser feitos anteriormente usando apenas `+` e `*`, mais os três novos que agora podem ser feitos usando também `||`), resulta no novo total de calibração de **11387**.
+
+Usando seu novo conhecimento sobre os esconderijos de elefantes, determine quais equações poderiam ser verdadeiras. Qual é o seu resultado total de calibração?
+
