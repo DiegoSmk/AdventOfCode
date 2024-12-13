@@ -24,12 +24,18 @@ fun main() {
     printLine()
 
     measureExecutionTime({
-//        val resultTest = 0
-//        printTestResult(resultTest, 0)
+        val resultTest = countAntinodesPartTwo(inputTest)
+        println("Total number of antinode locations (Part Two - Test): $resultTest")
+        printTestResult(resultTest, 34)
+
     }, "MAIN - PART TWO - Test")
     printLine()
 
-    measureExecutionTime({}, "MAIN - PART TWO")
+    measureExecutionTime({
+        val result = countAntinodesPartTwo(input)
+        println("Total number of antinode locations (Part Two): $result")
+
+    }, "MAIN - PART TWO")
     printLine()
 }
 
@@ -99,5 +105,71 @@ fun countAntinodes(map: List<String>): Int {
     }
 
     // Return the count of unique antinode positions
+    return antinodes.size
+}
+
+/**
+ * Counts the antinodes based on the updated rules.
+ * Antinodes occur at any grid position in line with at least two antennas of the same frequency,
+ * regardless of distance. Additionally, every antenna itself is also an antinode (unless it is the only one of its frequency).
+ */
+fun countAntinodesPartTwo(map: List<String>): Int {
+    // Step 1: Create a map to store antenna positions categorized by their frequency/letter
+    val antennas = mutableMapOf<Char, MutableList<Pair<Int, Int>>>()
+
+    for (y in map.indices) {
+        for (x in map[y].indices) {
+            val char = map[y][x]
+            if (char.isLetterOrDigit()) {
+                antennas.computeIfAbsent(char) { mutableListOf() }.add(Pair(x, y))
+            }
+        }
+    }
+
+    // Step 2: Store unique antinode locations
+    val antinodes = mutableSetOf<Pair<Int, Int>>()
+
+    // Step 3: Iterate through all antenna positions
+    for (positions in antennas.values) {
+        // If only one antenna of this frequency exists, skip alignment calculation
+        if (positions.size == 1) {
+            antinodes.add(positions[0]) // Add single antenna as an antinode
+            continue
+        }
+
+        // For each pair of antennas of the same frequency
+        for (first in positions) {
+            for (second in positions) {
+                if (first == second) continue
+
+                val (x1, y1) = first
+                val (x2, y2) = second
+
+                // Calculate the distance vector between two antennas
+                val deltaX = x2 - x1
+                val deltaY = y2 - y1
+
+                // Check positions in both directions from the first antenna
+                var positiveNextLocation = first
+                do {
+                    positiveNextLocation = Pair(positiveNextLocation.first + deltaX, positiveNextLocation.second + deltaY)
+                    if (positiveNextLocation.first in map[0].indices && positiveNextLocation.second in map.indices) {
+                        antinodes.add(positiveNextLocation)
+                    }
+                } while (positiveNextLocation.first in map[0].indices && positiveNextLocation.second in map.indices)
+
+                // Check positions in the negative direction from the first antenna
+                var negativeNextLocation = first
+                do {
+                    negativeNextLocation = Pair(negativeNextLocation.first - deltaX, negativeNextLocation.second - deltaY)
+                    if (negativeNextLocation.first in map[0].indices && negativeNextLocation.second in map.indices) {
+                        antinodes.add(negativeNextLocation)
+                    }
+                } while (negativeNextLocation.first in map[0].indices && negativeNextLocation.second in map.indices)
+            }
+        }
+    }
+
+    // Step 4: Return the total number of unique antinodes
     return antinodes.size
 }

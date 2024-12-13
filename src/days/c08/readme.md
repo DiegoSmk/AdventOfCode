@@ -93,3 +93,48 @@ Como a antena mais alta de frequência `A` se sobrepõe a um antinodo de frequê
 ## Objetivo
 
 Calcule o impacto do sinal. **Quantos locais únicos dentro dos limites do mapa contêm um antinodo?**
+
+# --- Parte Dois ---
+
+Enquanto você trabalha, um dos Historiadores, observando por cima do seu ombro, pergunta se você levou em consideração os efeitos das harmônicas ressonantes em seus cálculos.
+
+Ops!
+
+Após atualizar seu modelo, descobriu-se que um antinódulo ocorre em qualquer posição da grade que esteja exatamente alinhada com pelo menos duas antenas da mesma frequência, **independentemente da distância**. Isso significa que alguns dos novos antinódulos agora também ocorrem na posição de cada antena (a menos que aquela antena seja a única de sua frequência).
+
+Assim, estas três antenas de frequência **T** agora criam muitos antinódulos:
+
+```
+T....#....
+...T......
+.T....#...
+.........#
+..#.......
+..........
+...#......
+..........
+....#.....
+..........
+```
+
+De fato, as três antenas de frequência **T** estão todas exatamente alinhadas com duas outras antenas, então todas elas também são antinódulos! Isso traz o número total de antinódulos no exemplo acima para **9**.
+
+O exemplo original agora tem **34 antinódulos**, incluindo os antinódulos que aparecem em cada antena:
+
+```
+##....#....#
+.#.#....0...
+..#.#0....#.
+..##...0....
+....0....#..
+.#...#A....#
+...#..#.....
+#....#.#....
+..#.....A...
+....#....A..
+.#........#.
+...#......##
+```
+
+## Tarefa
+Calcule o impacto do sinal usando este modelo atualizado. **Quantos locais únicos dentro dos limites do mapa contêm um antinódulo?**
