@@ -4,7 +4,6 @@ import utils.measureExecutionTime
 import utils.printLine
 import utils.printTestResult
 import utils.readInput
-import kotlin.math.abs
 
 fun main() {
     val inputTest = readInput("inputC8e")
